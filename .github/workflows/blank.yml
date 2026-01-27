@@ -3,8 +3,6 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -13,12 +11,10 @@ permissions:
   pull-requests: write
 
 jobs:
-  build-and-test:
-    name: Build, Test and Lint
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -33,22 +29,14 @@ jobs:
       - name: Run Super-Linter
         uses: super-linter/super-linter@v6
         env:
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: true
-          # Opcjonalnie: wyłącz lintery, których nie potrzebujesz, by przyspieszyć proces
-          VALIDATE_JAVA: true 
+          VALIDATE_JAVA: true
 
       - name: Build with Maven
         run: chmod +x mvnw && ./mvnw clean package
 
-  deploy:
-    name: Deploy to Render
-    needs: build-and-test
-    # Deploy uruchamia się tylko po pushu do gałęzi main
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Trigger Render Deploy Hook
-        run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Trigger Render Deploy
+        if: github.ref == 'refs/heads/main'
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
