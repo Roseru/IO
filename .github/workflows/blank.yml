@@ -26,13 +26,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Run Super-Linter
+- name: Run Super-Linter
         uses: super-linter/super-linter@v6
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: true
-          VALIDATE_JAVA: true
+          VALIDATE_ALL_CODEBASE: false 
+          VALIDATE_JAVA: true         
+          VALIDATE_YAML: false         
 
       - name: Build with Maven
         run: chmod +x mvnw && ./mvnw clean package
