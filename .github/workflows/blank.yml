@@ -30,9 +30,7 @@ jobs:
         uses: super-linter/super-linter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Ustawiamy tylko Jave na true, reszta zostanie pominięta automatycznie
           VALIDATE_JAVA: true
-          # To pozwoli przejść dalej, nawet jeśli linter znajdzie drobne błędy w formatowaniu
           DISABLE_ERRORS: true 
 
       - name: Build with Maven
