@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI/CD Pipeline
 
 on:
   push:
@@ -13,14 +13,16 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint-and-test:
-    name: Static analysis & Tests
+  build-and-test:
+    name: Build, Test and Lint
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -33,16 +35,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: true
+          # Opcjonalnie: wyłącz lintery, których nie potrzebujesz, by przyspieszyć proces
+          VALIDATE_JAVA: true 
 
-      - name: Build and Test with Maven
-        run: mvn clean verify
+      - name: Build with Maven
+        run: chmod +x mvnw && ./mvnw clean package
 
   deploy:
     name: Deploy to Render
-    needs: lint-and-test
-    # Deploy odpala się TYLKO na mainie i TYLKO po pushu (np. po mergu PR)
+    needs: build-and-test
+    # Deploy uruchamia się tylko po pushu do gałęzi main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Trigger Deploy Hook
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Trigger Render Deploy Hook
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
