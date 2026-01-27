@@ -3,10 +3,18 @@ package io.demo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController //klasa obsługuje zapytania HTTP
-public class HelloController {
+/**
+ * Kontroler obsługujący podstawowe zapytania powitalne.
+ */
+@RestController
+public final class HelloController {
 
-    @GetMapping("/api/hello") //ścieżka URL
+    /**
+     * Zwraca komunikat potwierdzający działanie serwera.
+     *
+     * @return ciąg znaków z informacją o statusie serwera.
+     */
+    @GetMapping("/api/hello")
     public String sayHello() {
         return "Serwer działa poprawnie! :)";
     }
