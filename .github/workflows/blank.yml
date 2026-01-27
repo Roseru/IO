@@ -26,17 +26,21 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-- name: Run Super-Linter
+      - name: Run Super-Linter
         uses: super-linter/super-linter@v6
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false 
-          VALIDATE_JAVA: true         
-          VALIDATE_YAML: false         
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_JAVA: true
+          VALIDATE_YAML: false
+          # Jeśli linter nadal znajdzie drobne błędy, odkomentuj poniższą linię:
+          # DISABLE_ERRORS: true
 
       - name: Build with Maven
-        run: chmod +x mvnw && ./mvnw clean package
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package
 
       - name: Trigger Render Deploy
         if: github.ref == 'refs/heads/main'
