@@ -4,15 +4,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Kontroler obsługujący podstawowe zapytania powitalne.
+ * Kontroler obsługujący zapytania HTTP dla strony głównej i API.
  */
 @RestController
 public final class HelloController {
 
     /**
-     * Zwraca komunikat potwierdzający działanie serwera.
+     * Endpoint główny aplikacji.
      *
-     * @return ciąg znaków z informacją o statusie serwera.
+     * @return wiadomość powitalna na stronie głównej.
+     */
+    @GetMapping("/")
+    public String index() {
+        return "Witaj w mojej aplikacji Spring Boot! System CI/CD działa poprawnie.";
+    }
+
+    /**
+     * Endpoint API do testów.
+     *
+     * @return komunikat o statusie serwera.
      */
     @GetMapping("/api/hello")
     public String sayHello() {
