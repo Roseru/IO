@@ -47,8 +47,9 @@ public final class HelloController {
         status.put("status", "UP");
         status.put("serverTime", dtf.format(LocalDateTime.now()));
         status.put("environment", "Production (Render)");
-        status.put("message", "Aplikacja przetwarza dane dynamicznie.");
+        status.put("message", "Aplikacja przetwarza dane dynamicznie. :)");
         
         return status;
     }
 }
+
